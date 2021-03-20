@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 
 public class AbstractDAO {
-    private String url = "jdbc:mysql://localhost/mydb?" + "useUnicode=true&serverTimezone=UTC" + "&user=root2&password=root2";
+    private String url = "jdbc:mysql://localhost/mirea?" + "useUnicode=true&serverTimezone=UTC" + "&user=root2&password=root2";
 
     static {
         try {
