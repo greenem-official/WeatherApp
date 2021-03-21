@@ -1,5 +1,6 @@
 package com.mireaweb.app.views.charts;
 
+import com.mireaweb.app.UserState;
 import com.mireaweb.app.db.model.Weight;
 import com.vaadin.server.Page;
 import com.vaadin.ui.VerticalLayout;
@@ -59,6 +60,9 @@ public class ChartView extends VerticalLayout {
         wrapper.setHeight((float) (height), Unit.PIXELS);
 
         layout.addComponent(wrapper);
+
+        UserState.get().setTownSelected(null);
+        UserState.get().setTimeSelected(null);
 
         return layout;
     }

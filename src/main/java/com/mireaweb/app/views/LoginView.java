@@ -16,7 +16,7 @@ public class LoginView extends VerticalLayout {
     private UserService userService = new UserService();
 
     public LoginView() {
-        FormLayout form = new FormLayout();
+        /*FormLayout form = new FormLayout();
         form.setMargin(true);
 
         Label errorLabel = new Label("");
@@ -71,8 +71,8 @@ public class LoginView extends VerticalLayout {
         Panel panel = new Panel("Вход");
         panel.setSizeUndefined();
         panel.setContent(form);
-
+        */
         addComponent(AppUI.get().createMenu());
-        addComponent(panel);
+        //addComponent(panel);
     }
 }

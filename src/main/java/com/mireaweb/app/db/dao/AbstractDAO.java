@@ -1,8 +1,6 @@
 package com.mireaweb.app.db.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Connection to local database
@@ -23,5 +21,28 @@ public class AbstractDAO {
     protected Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(url);
         return conn;
+    }
+
+    public void CloseConnections(ResultSet rs, PreparedStatement preparedStatement, Connection connection) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException sqlEx) {
+            } // ignore
+        }
+
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException sqlEx) {
+            } // ignore
+        }
+
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException sqlEx) {
+            } // ignore
+        }
     }
 }

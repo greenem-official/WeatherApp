@@ -3,7 +3,7 @@ package com.mireaweb.app.views.charts;
 import com.mireaweb.app.AppUI;
 import com.mireaweb.app.UserState;
 import com.mireaweb.app.db.model.Weight;
-import com.mireaweb.app.services.WeightService;
+import com.mireaweb.app.services.DateService;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -18,14 +18,14 @@ import static com.mireaweb.app.util.WeightUtil.toRange;
  */
 
 public class YearChartView extends VerticalLayout {
-    private WeightService weightService = new WeightService();
+    private DateService dateService = new DateService();
 
     public YearChartView() {
         Panel panel = new Panel("График за год");
         panel.setSizeUndefined();
         long userId = UserState.get().getUser().getId();
 
-        List<Weight> weights = weightService.selectLastYear(userId);
+        List<Weight> weights = dateService.selectLastYear(userId);
         Date today = today();
         Date nDaysAgo = addDays(subtractYears(today, 1), 1);
         panel.setContent(new ChartView("Индекс массы тела", toRange(weights, nDaysAgo, today, 0)));

@@ -2,8 +2,8 @@ package com.mireaweb.app.views;
 
 import com.mireaweb.app.AppUI;
 import com.mireaweb.app.UserState;
-import com.mireaweb.app.db.dao.WeightDAO;
-import com.mireaweb.app.services.WeightService;
+import com.mireaweb.app.db.dao.DateDAO;
+import com.mireaweb.app.services.DateService;
 import com.vaadin.ui.*;
 
 import java.sql.Date;
@@ -17,8 +17,8 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class AddWeightView extends VerticalLayout {
-    private WeightService weightService = new WeightService();
-    private WeightDAO weightDao = new WeightDAO();
+    private DateService dateService = new DateService();
+    private DateDAO dateDao = new DateDAO();
 
     public TextField weightLast;
     public TextField weightToday;
@@ -75,7 +75,7 @@ public class AddWeightView extends VerticalLayout {
             saveButton.addClickListener(e -> {
                 String value = weightToday.getValue();
                 value = value.replaceAll(",", ".");
-                String sendErr = weightService.isSendWeightFieldCorrect(value);
+                String sendErr = dateService.isSendWeightFieldCorrect(value);
                 if (sendErr.equalsIgnoreCase("not double")) {
                     errorLabel.setVisible(true);
                     errorLabel.setValue("Пожалуйста, введите число");
@@ -84,7 +84,7 @@ public class AddWeightView extends VerticalLayout {
                     errorLabel.setVisible(true);
                     errorLabel.setValue("Число должно быть больше нуля");
                 } else if (sendErr.equalsIgnoreCase("successful")) {
-                    weightService.addWeight(UserState.get().getUser().getId(), new Date(System.currentTimeMillis()), Double.parseDouble(value));
+                    dateService.addWeight(UserState.get().getUser().getId(), new Date(System.currentTimeMillis()), Double.parseDouble(value));
                     errorLabel.setValue("Данные успешно отправленны");
                     errorLabel.setVisible(true);
                     //if(!lastDateOfWeight.isVisible()){
@@ -119,7 +119,7 @@ public class AddWeightView extends VerticalLayout {
         Date lastDate = null;
         if (UserState.get().getUser() != null) {
             try {
-                lastDate = weightDao.getDateOfLastWeight(UserState.get().getUser().getId());
+                lastDate = dateDao.getDateOfLastWeight(UserState.get().getUser().getId());
                 if(lastDate == null) {
                     lastDateOfWeight.setVisible(false);
                     return;
@@ -158,7 +158,7 @@ public class AddWeightView extends VerticalLayout {
         Double lastValue = null;
         if (UserState.get().getUser() != null) {
             try {
-                lastValue = weightDao.getLastWeight(UserState.get().getUser().getId());
+                lastValue = dateDao.getLastWeight(UserState.get().getUser().getId());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -174,7 +174,7 @@ public class AddWeightView extends VerticalLayout {
         Date lastDate = null;
         if (UserState.get().getUser() != null) {
             try {
-                lastDate = weightDao.getDateOfLastWeight(userId);
+                lastDate = dateDao.getDateOfLastWeight(userId);
                 if(lastDate == null) {
                     return "never";
                 }

@@ -3,7 +3,7 @@ package com.mireaweb.app.views.charts;
 import com.mireaweb.app.AppUI;
 import com.mireaweb.app.UserState;
 import com.mireaweb.app.db.model.Weight;
-import com.mireaweb.app.services.WeightService;
+import com.mireaweb.app.services.DateService;
 import com.mireaweb.app.util.DateUtil;
 import com.mireaweb.app.util.WeightUtil;
 import com.vaadin.ui.Panel;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class PeriodWeeksChartView extends VerticalLayout {
-    private WeightService weightService = new WeightService();
+    private DateService dateService = new DateService();
 
     public PeriodWeeksChartView(Date from, Date to) {
         String title = String.format("График за период с %s по %s", from, to);
@@ -28,7 +28,7 @@ public class PeriodWeeksChartView extends VerticalLayout {
         panel.setSizeUndefined();
         long userId = UserState.get().getUser().getId();
 
-        List<Weight> weights = weightService.selectPeriod(userId, from, to);
+        List<Weight> weights = dateService.selectPeriod(userId, from, to);
 
         LocalDate d1 = LocalDate.parse(to.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDate d2 = LocalDate.parse(from.toString(), DateTimeFormatter.ISO_LOCAL_DATE);

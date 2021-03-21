@@ -11,8 +11,27 @@ public class UserState {
     private static String SESSION_KEY_USER_STATE = "UserState";
 
     private User user;
-    private boolean graphsEnabled;
+    private boolean graphsEnabled = true;
     private boolean usePasswordField = true;
+
+    public String getTownSelected() {
+        return TownSelected;
+    }
+
+    public void setTownSelected(String townSelected) {
+        TownSelected = townSelected;
+    }
+
+    public String getTimeSelected() {
+        return TimeSelected;
+    }
+
+    public void setTimeSelected(String timeSelected) {
+        TimeSelected = timeSelected;
+    }
+
+    private String TownSelected;
+    private String TimeSelected;
 
     public static UserState get() {
         UserState userState = (UserState) VaadinSession.getCurrent().getAttribute(SESSION_KEY_USER_STATE);

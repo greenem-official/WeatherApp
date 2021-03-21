@@ -2,7 +2,6 @@ package com.mireaweb.app;
 
 import com.mireaweb.app.views.AddWeightView;
 import com.mireaweb.app.views.LoginView;
-import com.mireaweb.app.views.RegistrationView;
 import com.mireaweb.app.views.charts.*;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -33,15 +32,7 @@ public class AppUI extends UI {
 
     public Button loginButton;
     public Button registrationButton;
-    public Button exitButton;
 
-    public Button addWeightButton;
-
-    public Button weekChartButton;
-    public Button twoWeeksChartButton;
-    public Button monthChartButton;
-    public Button halfYearChartButton;
-    public Button yearChartButton;
     public DateField fromDate;
     public DateField toDate;
     public Button periodButton;
@@ -58,80 +49,44 @@ public class AppUI extends UI {
         HorizontalLayout line3 = new HorizontalLayout();
         HorizontalLayout line4 = new HorizontalLayout();
         GridLayout grid = new GridLayout(1, 3);
-
-        if (UserState.get().getUser() == null) {
-            loginButton = new Button("Войти");
-            loginButton.addClickListener(e -> setContent(new LoginView()));
-            line1.addComponent(loginButton);
-
-            registrationButton = new Button("Регистрация");
-            registrationButton.addClickListener(e -> setContent(new RegistrationView()));
-            line1.addComponent(registrationButton);
-
-            grid.addComponent(line1, 0, 0);
-        } else {
-            if(UserState.get().getUser()!=null) {
-                Label usernameText = new Label("Вы вошли как " + UserState.get().getUser().getEmail());
-                grid.addComponent(usernameText, 0, 0);
-            }
-            exitButton = new Button("Выйти");
-            exitButton.addClickListener(e -> {
-                UserState.get().setUser(null);
-                setContent(new LoginView());
-            });
-            line1.addComponent(exitButton);
-
-            addWeightButton = new Button("Ввести вес");
-            addWeightButton.addClickListener(e -> {
-                UserState.get().setGraphsEnabled(false);
-                setContent(new AddWeightView());
-            });
-            line1.addComponent(addWeightButton);
-
-            addWeightButton = new Button("Графики");
-            addWeightButton.addClickListener(e -> {
-                UserState.get().setGraphsEnabled(true);
-                setContent(new AddWeightView());
-            });
-            line1.addComponent(addWeightButton);
-
             if (UserState.get().getGraphsEnabled() == true) {
                 FormLayout charts = new FormLayout();
                 chartsControlling = charts;
                 //charts.setMargin(true);
 
-                Label textAboutCahrts = new Label("Графики веса");
+                Label textAboutCharts = new Label("Графики температуры воздуха");
+                charts.addComponent(textAboutCharts);
 
-                charts.addComponent(textAboutCahrts);
-
-                NativeSelect<String> selectBox = new NativeSelect<>("Посмотреть график");
-                selectBox.setEmptySelectionAllowed(false);
-                selectBox.setItems("График за неделю", "График за 2 недели", "График за месяц", "График за полгода", "График за год");
-                selectBox.addValueChangeListener(event -> {
+                NativeSelect<String> selectTownBox = new NativeSelect<>("Выбрать город");
+                selectTownBox.setEmptySelectionAllowed(false);
+                selectTownBox.setItems("Алмазный", "Западный", "Курортный", "Лесной", "Научный", "Полярный", "Портовый", "Приморский", "Садовый", "Северный", "Степной", "Таежный", "Южный");
+                selectTownBox.addValueChangeListener(event -> {
                     //System.out.println("listener " + event.getValue());
                     if (!event.getValue().equals(event.getOldValue())) {
                         String selected = event.getValue();
 //                    Notification.show(selected);
-                        if (selected.equalsIgnoreCase("График за неделю")) {
-                            setContent(new OneWeekChartView());
-                        }
-                        if (selected.equalsIgnoreCase("График за 2 недели")) {
-                            setContent(new TwoWeeksChartView());
-                        }
-                        if (selected.equalsIgnoreCase("График за месяц")) {
-                            setContent(new MonthChartView());
-                        }
-                        if (selected.equalsIgnoreCase("График за полгода")) {
-                            setContent(new HalfAYearChartView());
-                        }
-                        if (selected.equalsIgnoreCase("График за год")) {
-                            setContent(new YearChartView());
-                        }
+                        UserState.get().setTownSelected(selected);
+                        tryToGenerateGraph();
+                    }
+                });
+                line2.addComponent(selectTownBox);
+
+
+                NativeSelect<String> selectBox = new NativeSelect<>("Посмотреть график");
+                selectBox.setEmptySelectionAllowed(false);
+                selectBox.setItems("График за день", "График за неделю", "График за месяц", "График за полгода", "График за год");
+                selectBox.addValueChangeListener(event -> {
+                    //System.out.println("listener " + event.getValue());
+                    if (!event.getValue().equals(event.getOldValue())) {
+                        String selected = event.getValue();
+                        UserState.get().setTimeSelected(selected);
+//                    Notification.show(selected);
+                        tryToGenerateGraph();
                     }
                 });
                 line2.addComponent(selectBox);
 
-                Label text1 = new Label("Выбрать другой период:");
+                Label text1 = new Label("Выбрать произвольный период:");
                 line3.addComponent(text1);
 
                 fromDate = new DateField();
@@ -161,9 +116,30 @@ public class AppUI extends UI {
 
 //            charts.addComponent(line1);
             grid.addComponent(line1, 0, 1);
-        }
-
         return grid;
+    }
+
+    public void tryToGenerateGraph(){
+        String town = UserState.get().getTownSelected();
+        String time = UserState.get().getTimeSelected();
+        System.out.println("town = " + town + "; time = " + time);
+        if(town==null) return;
+        if(time==null) return;
+        if (time.equalsIgnoreCase("График за день")) {
+            setContent(new OneDayChartView());
+        }
+        if (time.equalsIgnoreCase("График за неделю")) {
+            setContent(new OneWeekChartView());
+        }
+        if (time.equalsIgnoreCase("График за месяц")) {
+            setContent(new MonthChartView());
+        }
+        if (time.equalsIgnoreCase("График за полгода")) {
+            setContent(new HalfAYearChartView());
+        }
+        if (time.equalsIgnoreCase("График за год")) {
+            setContent(new YearChartView());
+        }
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
