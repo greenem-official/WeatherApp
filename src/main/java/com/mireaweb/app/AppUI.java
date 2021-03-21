@@ -38,6 +38,10 @@ public class AppUI extends UI {
     public Button periodButton;
     public FormLayout chartsControlling;
 
+    public TextField yearField;
+    public TextField monthField;
+    public TextField dayField;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         setContent(new LoginView());
@@ -46,6 +50,9 @@ public class AppUI extends UI {
     public GridLayout createMenu() {
         HorizontalLayout line1 = new HorizontalLayout();
         HorizontalLayout line2 = new HorizontalLayout();
+        HorizontalLayout line2p1 = new HorizontalLayout();
+        HorizontalLayout line2p2 = new HorizontalLayout();
+        HorizontalLayout line2p3 = new HorizontalLayout();
         HorizontalLayout line3 = new HorizontalLayout();
         HorizontalLayout line4 = new HorizontalLayout();
         GridLayout grid = new GridLayout(1, 3);
@@ -71,6 +78,17 @@ public class AppUI extends UI {
                 });
                 line2.addComponent(selectTownBox);
 
+                yearField = new TextField("Год");
+//                yearField.setRequiredIndicatorVisible(true);
+                line2p1.addComponent(yearField);
+
+                monthField = new TextField("Месяц");
+//                monthField.setRequiredIndicatorVisible(true);
+                line2p2.addComponent(monthField);
+
+                dayField = new TextField("День");
+//                dayField.setRequiredIndicatorVisible(true);
+                line2p3.addComponent(dayField);
 
                 NativeSelect<String> selectBox = new NativeSelect<>("Посмотреть график");
                 selectBox.setEmptySelectionAllowed(false);
@@ -109,6 +127,9 @@ public class AppUI extends UI {
                 });
                 line4.addComponent(periodButton);
                 charts.addComponent(line2);
+                charts.addComponent(line2p1);
+                charts.addComponent(line2p2);
+                charts.addComponent(line2p3);
                 charts.addComponent(line3);
                 charts.addComponent(line4);
                 grid.addComponent(charts, 0, 2);
@@ -120,11 +141,21 @@ public class AppUI extends UI {
     }
 
     public void tryToGenerateGraph(){
+        if(isInt(yearField.getValue())) UserState.get().setYear(yearField.getValue());
+        if(isInt(monthField.getValue())) UserState.get().setYear(monthField.getValue());
+        if(isInt(dayField.getValue())) UserState.get().setYear(dayField.getValue());
+
         String town = UserState.get().getTownSelected();
         String time = UserState.get().getTimeSelected();
+        String year = UserState.get().getYear();
+        String month = UserState.get().getMonth();
+        String day = UserState.get().getDay();
         System.out.println("town = " + town + "; time = " + time);
         if(town==null) return;
         if(time==null) return;
+        if(year==null) return;
+        if(month==null) return;
+        if(day==null) return;
         if (time.equalsIgnoreCase("График за день")) {
             setContent(new OneDayChartView());
         }
@@ -140,6 +171,17 @@ public class AppUI extends UI {
         if (time.equalsIgnoreCase("График за год")) {
             setContent(new YearChartView());
         }
+    }
+
+    public boolean isInt(String s){
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
