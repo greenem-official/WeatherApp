@@ -320,6 +320,7 @@ public class MainDao extends AbstractDAO {
 //			System.out.println(date);
 			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M2", "lastLoginAdress") == null);
 			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "password", "lastLoginPort").get(1));
+			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "password", "lastLoginPort").get(1));
 			System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "password").equals("nO"));
 		} catch (SQLException e) {
 			e.printStackTrace();
